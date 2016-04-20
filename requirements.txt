@@ -1,0 +1,10 @@
+Flask-Mail :发送与认证相关的电子邮件
+Flask-Bootstrap :HTML模板
+Flask-WTF :Web表单
+Flask-Login :管理已登录的用户会话
+Flask-SQLAlchemy :管理数据库
+Flask-Moment :时间本地化
+Flask-Script :shell支持
+Flask-Migrate :...
+Werkzeug :计算密码散列值并进行核对
+itsdangerous :生成并核对加密安全令牌
