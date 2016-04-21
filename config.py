@@ -11,9 +11,9 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'nadjk4#h389%1ajk^sadb32ead$3w@$'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <xiushilin@hotmail.com>'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    BLOG_MAIL_SUBJECT_PREFIX = '[Blog]'
+    BLOG_MAIL_SENDER = 'Blog Admin <xiushilin@hotmail.com>'
+    BLOG_ADMIN = os.environ.get('BLOG_ADMIN')
     MAIL_SERVER = 'smtp.live.com'
     MAIL_PORT = 25
     MAIL_USE_TLS = True

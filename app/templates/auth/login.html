@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Flasky - Login{% endblock %}
+{% block title %}Blog - Login{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
@@ -15,6 +15,8 @@
         <a href="{{ url_for('auth.register') }}">
             Click here to register!
         </a>
+        <br/>
+        <p>Forgot your password? <a href="{{ url_for('auth.password_reset_request') }}">Click here to reset it</a>.</p>
     </p>
 </div>
 {% endblock %}
