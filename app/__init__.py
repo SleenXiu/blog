@@ -10,6 +10,7 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config
+from flask_pagedown import PageDown
 
 
 # 变量
@@ -19,6 +20,7 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
+pagedown = PageDown()
 
 # login
 login_manager = LoginManager()
@@ -36,6 +38,7 @@ def create_app(config_name):
     mail.init_app(app)
     moment.init_app(app)
     db.init_app(app)
+    pagedown.init_app(app)
 
     login_manager.init_app(app)
 

@@ -11,6 +11,9 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
 import hashlib
 from flask_moment import datetime
+from markdown import markdown
+import bleach
+
 
 
 # 用户角色
@@ -22,8 +25,6 @@ class Role(db.Model):
     permissions = db.Column(db.Integer)
     user = db.relationship('User', backref='role', lazy='dynamic')
 
-    def __repr__(self):
-        return '<Role %r>' % self.name
 
     @staticmethod
     def insert_roles():
@@ -45,6 +46,10 @@ class Role(db.Model):
                 role.default = roles[r][1]
                 db.session.add(role)
             db.session.commit()
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
+
 
 # 权限常量--关注、评论、写文章、管理评论、管理员
 class Permission:
@@ -70,6 +75,32 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
+
+
+    # 生成虚拟用户
+    @staticmethod
+    def generate_fake(count=100):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            u = User(email=forgery_py.internet.email_address(),
+                     username=forgery_py.internet.user_name(True),
+                     password=forgery_py.lorem_ipsum.word(),
+                     confirmed=True,
+                     name=forgery_py.name.full_name(),
+                     location=forgery_py.address.city(),
+                     about_me=forgery_py.lorem_ipsum.sentence(),
+                     member_since=forgery_py.date.date(True))
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
     # 构造函数——初始化角色
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -84,7 +115,7 @@ class User(UserMixin, db.Model):
 
     # 角色权限验证
     def can(self, permissions):
-        return self.role is not None and\
+        return self.role is not None and \
                (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
@@ -179,12 +210,47 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    body_html = db.Column(db.Text)
+
+    # 生成虚拟博客文章
+    @staticmethod
+    def generate_fake(count=100):
+        from random import seed, randint
+        import forgery_py
+
+        seed()
+        user_count = User.query.count()
+        for i in range(count):
+            u = User.query.offset(randint(0, user_count - 1)).first()
+            p = Post(body=forgery_py.lorem_ipsum.sentences(randint(1, 5)),
+                     timestamp=forgery_py.date.date(True),
+                     author=u)
+            db.session.add(p)
+            db.session.commit()
+
+    # 类方法，渲染body为html并保存到body_html
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i',
+                        'strong']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+# 监听set，调用on_changed_body
+db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
 
-    def is_adminstrator(self):
+    def is_administrator(self):
         return False
 
 login_manager.anonymous_user = AnonymousUser

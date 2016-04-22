@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 {% block title %}Blog{% endblock %}
 
 {% block page_content %}
@@ -8,6 +10,23 @@
         {% else %}
         Stranger{% endif %}!</h1>
 </div>
+<div>
+    {% if current_user.can(Permission.WRITE_APTICLES) %}
+    {{ wtf.quick_form(form) }}
+    {% endif %}
+</div>
+<div class="post-tabs">
+    {% include '_posts.html' %}
+</div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
+{% endblock %}
 
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
 {% endblock %}
 

@@ -20,6 +20,8 @@ class Config:
     MAIL_USE_SSL = False
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    BLOG_POSTS_PER_PAGE = 20
+
 
     @staticmethod
     def init_app(app):

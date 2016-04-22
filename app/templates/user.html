@@ -11,7 +11,7 @@
         <p>
             {% if user.name %}{{ user.name }}{% endif %}
             {% if user.location %}
-            From <a href="http://maps.baidu.com/?q={{ user.location }}">
+            From <a href="http://maps.google.cn/?q={{ user.location }}">
                 {{ user.location }}
             </a>
             {% endif %}
@@ -34,5 +34,8 @@
             {% endif %}
         </p>
     </div>
+</div>
+<div class="post-tabs">
+     {% include '_posts.html' %}
 </div>
 {% endblock %}

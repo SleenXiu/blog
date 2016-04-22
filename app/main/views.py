@@ -1,20 +1,14 @@
 # coding=utf-8
 # created by sleen 
 
-from flask import render_template, request, abort, flash, redirect, url_for
+from flask import render_template, abort, flash, redirect, url_for, request
 from . import main
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, current_app
 from ..decorators import admin_required
-from ..models import User, Role
-from forms import EditProfileForm, EditProfileAdminForm
+from ..models import User, Role, Permission, Post
+from forms import EditProfileForm, EditProfileAdminForm, PostForm
 from .. import db
 
-@main.route('/')
-def index():
-    show_followed = False
-    if current_user.is_authenticated:
-        show_followed = bool(request.cookies.get('show_followed', ''))
-    return render_template('index.html',show_followed=show_followed)
 
 
 @main.route('/admin')
@@ -29,7 +23,12 @@ def user(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
         abort(404)
-    return render_template('user.html', user=user)
+    posts = user.posts.order_by(Post.timestamp.desc()).all()
+    return render_template('user.html', user=user, posts=posts)
+
+
+
+
 
 # 编辑用户资料路由
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -75,3 +74,46 @@ def edit_profile_admin(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
+
+
+
+# 博客文章页面的路由
+@main.route('/', methods=['GET', 'POST'])
+def index():
+    form = PostForm()
+    if current_user.can(Permission.WRITE_APTICLES) and form.validate_on_submit():
+        post = Post(body=form.body.data,
+                    author_id=current_user.id)
+        db.session.add(post)
+        return redirect(url_for('.index'))
+    page = request.args.get('page', 1, type=int)
+
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['BLOG_POSTS_PER_PAGE'],
+        error_out=False)
+    posts = pagination.items
+    return render_template('index.html', form=form, posts=posts,
+                            pagination=pagination)
+
+
+@main.route('/post/<int:id>')
+def post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', posts=[post])
+
+
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    post = Post.query.get_or_404(id)
+    if current_user != post.author and \
+            not current_user.can(Permission.ADMINISTER):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.body = form.body.data
+        db.session.add(post)
+        flash('The post has been updated.')
+        return redirect(url_for('.post', id=post.id))
+    form.body.data = post.body
+    return render_template('edit_post.html', form=form)
