@@ -21,6 +21,8 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     BLOG_POSTS_PER_PAGE = 20
+    BLOG_FOLLOWERS_PER_PAGE = 10
+    BLOG_COMMENTS_PER_PAGE = 10
 
 
     @staticmethod
