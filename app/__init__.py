@@ -42,6 +42,8 @@ def create_app(config_name):
 
     login_manager.init_app(app)
 
+    db.create_all()
+
     # 附加路由和自定义的错误界面
     # 使用蓝本
     from .main import main as main_blueprint

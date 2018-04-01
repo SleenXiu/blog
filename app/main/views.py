@@ -1,7 +1,7 @@
 # coding=utf-8
 # created by sleen 
 
-from flask import render_template, abort, flash, redirect, url_for, request, make_response
+from flask import current_app, render_template, abort, flash, redirect, url_for, request, make_response
 from . import main
 from flask_login import current_user, login_required
 from ..decorators import admin_required, permission_required

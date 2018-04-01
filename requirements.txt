@@ -3,6 +3,7 @@ Flask-Bootstrap
 Flask-WTF
 Flask-Login
 Flask-SQLAlchemy
+SQLAlchemy
 Flask-Moment
 Flask-Script
 Flask-Migrate
@@ -12,3 +13,4 @@ Forgerypy
 Flask-PageDown
 MarkDown
 Bleach
+mysql-python
