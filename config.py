@@ -33,8 +33,9 @@ class Config:
 # DevelopmentConfig子类，开发用的配置
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data_dev.sqlite')
+#SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+#       'sqlite:///' + os.path.join(basedir, 'data_dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'mysql://xiu:xiu@172.30.228.175/blogdb'
 
 # TestingConfig子类，测试用的配置
 class TestingConfig(Config):
@@ -49,6 +50,8 @@ class ProductConfig(Config):
 
 # 可以在这添加新的配置
 # ......
+class OpenShiftConfig(Config):
+
 
 # config
 config = {
