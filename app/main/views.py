@@ -3,7 +3,7 @@
 
 from flask import render_template, abort, flash, redirect, url_for, request, make_response
 from . import main
-from flask_login import current_user, login_required, current_app
+from flask_login import current_user, login_required
 from ..decorators import admin_required, permission_required
 from ..models import User, Role, Permission, Post, Comment
 from forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
