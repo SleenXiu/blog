@@ -33,7 +33,7 @@ class Config:
 # DevelopmentConfig子类，开发用的配置
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://xiu:xiu@172.30.3.183/blogdb'
+    SQLALCHEMY_DATABASE_URI = 'mysql://xiu:xiu@172.30.160.187/blogdb'
 
 # TestingConfig子类，测试用的配置
 class TestingConfig(Config):
