@@ -24,6 +24,8 @@ class Config:
     BLOG_FOLLOWERS_PER_PAGE = 10
     BLOG_COMMENTS_PER_PAGE = 10
 
+    TEMPLATES_AUTO_RELOAD = True
+    BOOTSTRAP_SERVE_LOCAL = True
 
     @staticmethod
     def init_app(app):

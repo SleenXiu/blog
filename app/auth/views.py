@@ -8,8 +8,15 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from ..models import User
-from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
-    PasswordResetForm, PasswordResetRequestForm, ChangeEmailForm
+from .forms import (
+    LoginForm,
+    PhoneLoginForm,
+    RegistrationForm, 
+    ChangePasswordForm,
+    PasswordResetForm, 
+    PasswordResetRequestForm, 
+    ChangeEmailForm
+)
 from .. import db
 from ..email import send_email
 
@@ -18,6 +25,7 @@ from ..email import send_email
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    p_form = PhoneLoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):

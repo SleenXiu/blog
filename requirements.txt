@@ -13,4 +13,4 @@ Forgerypy
 Flask-PageDown
 MarkDown
 Bleach
-mysql-python
+
