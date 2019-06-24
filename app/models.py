@@ -13,7 +13,6 @@ import hashlib
 from flask_moment import datetime
 from markdown import markdown
 import bleach
-from exceptions import ValidationError
 
 
 
@@ -164,7 +163,7 @@ class User(UserMixin, db.Model):
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
 
-        self.follow(self)
+        # self.follow(self)
 
 
     # 角色权限验证

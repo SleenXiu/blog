@@ -13,8 +13,7 @@ from app.models import User, Role, Post
 
 # 创建应用
 # app = create_app(os.getenv('BLOG_CONFIG') or 'default')
-#app = create_app('default')
-app = create_app('testing')
+app = create_app('default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 

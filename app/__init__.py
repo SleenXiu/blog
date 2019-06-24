@@ -12,6 +12,10 @@ from flask_login import LoginManager
 from config import config
 from flask_pagedown import PageDown
 
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
 
 # 变量
 
@@ -41,6 +45,7 @@ def create_app(config_name):
     pagedown.init_app(app)
 
     login_manager.init_app(app)
+
 
     # 附加路由和自定义的错误界面
     # 使用蓝本

@@ -12,13 +12,13 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BLOG_MAIL_SUBJECT_PREFIX = '[Blog]'
-    BLOG_MAIL_SENDER = 'Blog Admin <xiushilin@hotmail.com>'
+    BLOG_MAIL_SENDER = 'Blog Admin <help@xiusl.com>'
     BLOG_ADMIN = os.environ.get('BLOG_ADMIN')
-    MAIL_SERVER = 'smtp.live.com'
-    MAIL_PORT = 25
-    MAIL_USE_TLS = True
-    MAIL_USE_SSL = False
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_SERVER = 'smtp.exmail.qq.com'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'help@xiusl.com'
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     BLOG_POSTS_PER_PAGE = 20
     BLOG_FOLLOWERS_PER_PAGE = 10
@@ -26,6 +26,8 @@ class Config:
 
     TEMPLATES_AUTO_RELOAD = True
     BOOTSTRAP_SERVE_LOCAL = True
+
+    print(MAIL_PASSWORD)
 
     @staticmethod
     def init_app(app):
@@ -35,7 +37,7 @@ class Config:
 # DevelopmentConfig子类，开发用的配置
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://xiu:xiu@172.30.160.187/blogdb'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:@127.0.0.1:3306/blogdb'
 
 # TestingConfig子类，测试用的配置
 class TestingConfig(Config):
